@@ -1,0 +1,16 @@
+{
+  "name": "node_js_api",
+  "version": "1.0.0",
+  "description": "curso de node desenvolvendo api seguindo padrão rest",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Eduardo Henrique",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "consign": "^0.1.6",
+    "express": "^4.16.3"
+  }
+}
