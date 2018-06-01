@@ -13,6 +13,7 @@ module.exports = function () {
 
     consign()
         .include('routes')
+        .then('persistencia')
         .into(app);
 
     return app;
