@@ -16,6 +16,9 @@ class PagamentosDao {
         this._connection.query('insert into pagamentos set ?', pagamento, callback);
     }
     
+    atualiza(pagamento, callback){
+        this._connection.query('update pagamentos set status = ? where id = ?', [pagamento.status, pagamento.id], callback);
+    }
 }
 
 module.exports = function(){

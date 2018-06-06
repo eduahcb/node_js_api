@@ -46,13 +46,57 @@ module.exports = function (app) {
         res.status(500).send(err);
       }
       else {
-        res.location('/pagamentos/pagamento' + result.insertId);
-        pagamento.id = result.insertId;
-
+		pagamento.id = result.insertId;
+		res.location('/pagamentos/pagamento' + pagamento.id);
         res.status(201).json(pagamento);
       }
     });
-
     connection.end();
+  });
+
+  app.put('/pagamentos/pagamento/:id', (req, res) =>{
+
+	let pagamento = {};
+	let id = req.params.id;
+
+	pagamento.id = id;
+	pagamento.status = "CONFIRMADO";
+
+	let connection = new app.persistencia.dbConnection();
+	let pagamentoDao = new app.persistencia.PagamentosDao(connection);
+	
+	pagamentoDao.atualiza(pagamento, (err, result) =>{
+		if(err){
+			console.log(`Ocorreu um erro: ${err}`);
+			res.status(500).send(err);
+		}
+		else{
+			res.send(pagamento);
+		}
+	});
+	connection.end();
+  });
+
+  app.delete('/pagamentos/pagamento/:id', (req, res) =>{
+
+	let pagamento = {};
+	let id = req.params.id;
+
+	pagamento.id = id;
+	pagamento.status = "CANCELADO";
+
+	let connection = new app.persistencia.dbConnection();
+	let pagamentoDao = new app.persistencia.PagamentosDao(connection);
+	
+	pagamentoDao.atualiza(pagamento, (err, result) =>{
+		if(err){
+			console.log(`Ocorreu um erro: ${err}`);
+			res.status(500).send(err);
+		}
+		else{
+			res.status(204).json(pagamento);
+		}
+	});
+	connection.end();
   });
 }
