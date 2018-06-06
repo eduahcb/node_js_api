@@ -6,6 +6,7 @@ function createDbConnection() {
         user: 'root',
         password: '1234',
         database: 'payfast',
+        insecureAuth : true
     });
 }
 module.exports = function () {
