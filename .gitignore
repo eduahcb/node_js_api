@@ -1,2 +1,2 @@
-node_modules
-persistencia/*
+/node_modules
+/persistencia/dbConnection.js
