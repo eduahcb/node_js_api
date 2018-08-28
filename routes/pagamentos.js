@@ -20,6 +20,24 @@ module.exports = function (app) {
         });
     });
 
+    app.get('/pagamentos/pagamento/:id', (req, res) => {
+
+        const id = req.params.id;
+
+        let connection = new app.persistencia.dbConnection();
+        let pagamentoDao = new app.persistencia.PagamentosDao(connection);
+        
+        pagamentoDao.buscaPorId(id, (err, result) => {
+            if(err){
+                res.status(500).json(err);
+            }
+            else{
+                res.status(200).json(result);
+            }
+        })
+
+    });
+
     app.post('/pagamentos/pagamento', (req, res) => {
 
         req.assert('pagamento.forma_de_pagamento', 'forma de pagamento é obrigatório').notEmpty();
