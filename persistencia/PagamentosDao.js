@@ -9,7 +9,7 @@ class PagamentosDao {
     }
     
     buscaPorId(id, callback){
-        this._connection.query("select * from pagamentos where = id ?", [id], callback);
+        this._connection.query("select * from pagamentos where id  = ?", id, callback);
     }
     
     salva(pagamento, callback){
