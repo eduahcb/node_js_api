@@ -26,16 +26,28 @@ module.exports = function (app) {
 
         let connection = new app.persistencia.dbConnection();
         let pagamentoDao = new app.persistencia.PagamentosDao(connection);
+        let redisCliente = new app.servicos.redis();
         
-        pagamentoDao.buscaPorId(id, (err, result) => {
-            if(err){
-                res.status(500).json(err);
+        redisCliente.hgetall(`pagamento-${id}`, (err, reply) => {
+            if(err || !reply){
+
+                console.log('não tem no servidor redis');
+
+                pagamentoDao.buscaPorId(id, (err, result) => {
+                    if(err){
+                        res.status(500).json(err);
+                    }
+                    else{
+                        res.status(200).json(result);
+                    }
+                });
             }
             else{
-                res.status(200).json(result);
+                console.log(reply);
+                console.log('utilizando o servidor redis');
+                res.status(200).json(reply);
             }
-        })
-
+        });
     });
 
     app.post('/pagamentos/pagamento', (req, res) => {
@@ -113,6 +125,10 @@ module.exports = function (app) {
                     pagamento.id = result.insertId;
                     res.location('/pagamentos/pagamento' + pagamento.id);
 
+                    const redisCliente = new app.servicos.redis();
+
+                    redisCliente.hmset(`pagamento-${pagamento.id}`, ["forma_de_pagamento", pagamento.forma_de_pagamento, "valor", pagamento.valor, "moeda", pagamento.moeda, "descricao", pagamento.descricao]);
+
                     let response = {
                         dados_do_pagamento: pagamento,
                         links: [
@@ -152,6 +168,14 @@ module.exports = function (app) {
                 res.status(500).send(err);
             }
             else {
+                pagamentoDao.buscaPorId(id, (err, result) => {
+                    if(err){
+                        res.status(500).json(err);
+                    }
+                    else{
+                        res.status(200).json(result);
+                    }
+                });
                 console.log("pagamento criado");
                 res.send(pagamento);
             }
