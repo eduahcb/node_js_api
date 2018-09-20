@@ -1,3 +1,5 @@
+const logger = require('../servicos/logger.js');
+
 module.exports = function (app) {
 
     const pagamento_criado = "CRIADO";
@@ -28,6 +30,8 @@ module.exports = function (app) {
         let pagamentoDao = new app.persistencia.PagamentosDao(connection);
         let redisCliente = new app.servicos.redis();
         
+        /* logger.info(`consultando pagamento: ${id}`); */
+
         redisCliente.hgetall(`pagamento-${id}`, (err, reply) => {
             if(err || !reply){
 
@@ -43,7 +47,6 @@ module.exports = function (app) {
                 });
             }
             else{
-                console.log(reply);
                 console.log('utilizando o servidor redis');
                 res.status(200).json(reply);
             }
