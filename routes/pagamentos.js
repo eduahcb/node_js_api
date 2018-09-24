@@ -8,7 +8,7 @@ module.exports = function (app) {
 
     app.get('/pagamentos', (req, res) => {
 
-        let connection = new app.persistencia.dbConnection();
+        let connection = app.persistencia.dbConnection();
         let pagamentoDao = new app.persistencia.PagamentosDao(connection);
 
         pagamentoDao.lista((err, result) => {
